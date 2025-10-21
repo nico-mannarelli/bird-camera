@@ -76,14 +76,6 @@ python inference.py --image bird.jpg --conf 0.5
 | Training Time | 11 hours |
 | Epochs | 50 |
 
-### Training Curves
-![Training Results](bird_detection/results.png)
-*Training and validation metrics over 50 epochs showing model convergence*
-
-### Confusion Matrix
-![Confusion Matrix](bird_detection/confusion_matrix.png)
-*Model performance visualization across different bird species classifications*
-
 ### Example Detections
 
 **Bullock's Oriole Detection:**
