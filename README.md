@@ -17,7 +17,7 @@ An end-to-end machine learning project for real-time bird species detection and 
 This project demonstrates a complete ML pipeline from data preparation to deployment:
 
 - **Dataset:** NABirds (555 North American bird species)
-- **Model:** YOLOv8 (You Only Look Once v8)
+- **Model:** YOLOv8 
 - **Training:** 50 epochs on AWS SageMaker ml.g4dn.xlarge GPU
 - **Deployment:** Streamlit Cloud with automatic model downloading
 - **Performance:** 97%+ confidence on test images, ~300ms inference time
