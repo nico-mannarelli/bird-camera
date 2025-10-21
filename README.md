@@ -8,8 +8,6 @@
 
 An end-to-end machine learning project for real-time bird species detection and classification using YOLOv8, trained on AWS SageMaker GPU infrastructure.
 
-![Demo](results/example_detections.jpg)
-
 ---
 
 ## Project Overview
