@@ -68,9 +68,11 @@ python inference.py --image bird.jpg --conf 0.5
 
 | Metric | Value |
 |--------|-------|
-| Final Loss | [Add from results.csv] |
-| mAP@50 | [Add from results.csv] |
-| mAP@50-95 | [Add from results.csv] |
+| Final Loss | 0.655 |
+| mAP@50 | 0.699 |
+| mAP@50-95 | 0.531 |
+| Precision | 0.633 |
+| Recall | 0.632 |
 | Training Time | 11 hours |
 | Epochs | 50 |
 
