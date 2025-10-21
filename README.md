@@ -82,6 +82,7 @@ python inference.py --image bird.jpg --conf 0.5
 - Species: Bullock's Oriole (Adult male)
 - Confidence: 97.7%
 - Inference Time: 309ms
+![Example 1](examples/oriole-result.jpg)
 
 [Add more example images here]
 
