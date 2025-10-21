@@ -1,6 +1,6 @@
-# 🐦 Bird Species Detection with YOLOv8
+# Bird Species Detection with YOLOv8
 
-**🌐 [Try the Live Demo](https://bird-camera-cdp4j7hnunww5vie2ty4fa.streamlit.app/)** | **📊 [View Results](#results)** | **🛠️ [Technical Details](#technical-stack)**
+** [Try the Live Demo](https://bird-camera-cdp4j7hnunww5vie2ty4fa.streamlit.app/)** | **📊 [View Results](#results)** | **🛠️ [Technical Details](#technical-stack)**
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://bird-camera-cdp4j7hnunww5vie2ty4fa.streamlit.app/)
 ![Python](https://img.shields.io/badge/python-3.10+-blue.svg)
@@ -12,7 +12,7 @@ An end-to-end machine learning project for real-time bird species detection and 
 
 ---
 
-## 🎯 Project Overview
+## Project Overview
 
 This project demonstrates a complete ML pipeline from data preparation to deployment:
 
@@ -31,7 +31,7 @@ This project demonstrates a complete ML pipeline from data preparation to deploy
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Option 1: Use the Live Web App
 Simply visit [the deployed app](https://bird-camera-cdp4j7hnunww5vie2ty4fa.streamlit.app/) and upload a bird image!
@@ -62,7 +62,7 @@ python inference.py --image bird.jpg --conf 0.5
 
 ---
 
-## 📊 Results
+## Results
 
 ### Training Performance
 
@@ -93,7 +93,7 @@ python inference.py --image bird.jpg --conf 0.5
 
 ---
 
-## 🛠️ Technical Stack
+## Technical Stack
 
 ### Machine Learning
 - **Framework:** PyTorch 2.0
@@ -121,7 +121,7 @@ python inference.py --image bird.jpg --conf 0.5
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 ```
 bird-camera/
 ├── app.py                          # Streamlit web application
@@ -143,7 +143,7 @@ bird-camera/
 
 ---
 
-## 🔬 Methodology
+## Methodology
 
 ### 1. Data Preparation
 - Downloaded NABirds dataset
@@ -177,7 +177,7 @@ results = model.train(
 
 ---
 
-## 🎓 What I Learned
+## What I Learned
 
 ### Technical Skills
 - **AWS SageMaker:** Setting up training jobs, managing compute resources, S3 integration
@@ -195,7 +195,7 @@ results = model.train(
 
 ---
 
-## 🔮 Future Improvements
+## Future Improvements
 
 - [ ] Add batch processing for multiple images
 - [ ] Implement video detection (real-time from webcam)
@@ -210,24 +210,7 @@ results = model.train(
 
 ---
 
-## 📝 Training Logs
-
-<details>
-<summary>Click to expand full training output</summary>
-```
-Epoch 1/50: loss=2.3, mAP=0.15
-Epoch 2/50: loss=2.1, mAP=0.18
-...
-Epoch 50/50: loss=0.96, mAP=0.87
-```
-
-[Add full training logs or link to them]
-
-</details>
-
----
-
-## 🤝 Acknowledgments
+## Acknowledgments
 
 - **NABirds Dataset:** Van Horn et al.
 - **Ultralytics YOLOv8:** For the excellent object detection framework
@@ -236,22 +219,21 @@ Epoch 50/50: loss=0.96, mAP=0.87
 
 ---
 
-## 📧 Contact
+## Contact
 
 **Nico Mannarelli**
 - GitHub: [@nico-mannarelli](https://github.com/nico-mannarelli)
-- LinkedIn: [Your LinkedIn]
-- Email: [Your Email]
-- Portfolio: [Your Website]
+- LinkedIn: [www.linkedin.com/in/nico-mannarelli]
+- Email: [nicomannarelli@gmail.com]
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## ⭐ Star This Repo
+## Star This Repo
 
 If you found this project helpful or interesting, please consider giving it a star! It helps others discover the project.
