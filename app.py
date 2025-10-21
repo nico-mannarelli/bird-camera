@@ -1,7 +1,8 @@
 import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
-import numpy as np
+import gdown
+import os
 
 st.set_page_config(page_title="Bird Species Detector", page_icon="🐦")
 
@@ -11,7 +12,23 @@ st.write("Upload an image to detect and classify bird species using YOLOv8")
 # Load model (cached so it only loads once)
 @st.cache_resource
 def load_model():
-    return YOLO('bird_detection/weights/best.pt')
+    model_path = 'best.pt'
+    
+    # Download if not exists
+    if not os.path.exists(model_path):
+        with st.spinner("⬇️ Downloading model (first time only, ~23MB)..."):
+            # REPLACE THIS WITH YOUR ACTUAL FILE ID
+            file_id = "1SjfGJ3UUgWQ_V95TLWoWsmkNk-VaAXkv"
+            url = f'https://drive.google.com/uc?id={file_id}'
+            
+            try:
+                gdown.download(url, model_path, quiet=False)
+                st.success("✅ Model downloaded!")
+            except Exception as e:
+                st.error(f"Failed to download model: {e}")
+                st.stop()
+    
+    return YOLO(model_path)
 
 model = load_model()
 
@@ -71,4 +88,3 @@ with st.sidebar:
     2. Wait for detection (~1 second)
     3. View results with bounding boxes and species labels
     """)
-
