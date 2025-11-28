@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐦 Bird Species Detector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐦 Bird Species Detector</h1>
+            <p>Upload an image to detect and classify bird species using YOLOv8</p>
+        </header>
+
+        <main>
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <input type="file" id="fileInput" accept="image/jpeg,image/jpg,image/png" hidden>
+                    <div class="upload-content">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p>Click to upload or drag and drop</p>
+                        <p class="file-types">JPG, JPEG, or PNG</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="images-container">
+                    <div class="image-box">
+                        <h3>Original Image</h3>
+                        <img id="originalImage" alt="Original">
+                    </div>
+                    <div class="image-box">
+                        <h3>Detection Results</h3>
+                        <img id="resultImage" alt="Detection Results">
+                    </div>
+                </div>
+
+                <div class="detections-container">
+                    <h3>Detected Species:</h3>
+                    <div id="detectionsList"></div>
+                </div>
+            </div>
+
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>🔍 Detecting birds...</p>
+            </div>
+
+            <div class="error" id="error" style="display: none;"></div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="info-section">
+                <h2>About</h2>
+                <p>This bird detector uses YOLOv8 trained on the NABirds dataset with 555 North American bird species.</p>
+                
+                <h3>Model Stats:</h3>
+                <ul>
+                    <li>Architecture: YOLOv8n</li>
+                    <li>Training: 50 epochs on AWS SageMaker</li>
+                    <li>Inference: ~300ms per image</li>
+                </ul>
+            </div>
+
+            <div class="info-section">
+                <h2>How to Use</h2>
+                <ol>
+                    <li>Upload a bird image (JPG, JPEG, or PNG)</li>
+                    <li>Wait for detection (~1 second)</li>
+                    <li>View results with bounding boxes and species labels</li>
+                </ol>
+            </div>
+        </aside>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
