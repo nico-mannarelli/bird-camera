@@ -1,0 +1,17 @@
+# Files to ignore in Railway deployment
+bird_detection/
+examples/
+*.md
+.git/
+.gitignore
+netlify/
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*.log
+
