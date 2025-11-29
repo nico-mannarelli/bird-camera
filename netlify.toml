@@ -1,6 +1,10 @@
 [build]
   publish = "."
   command = "echo 'No build needed'"
+  functions = "netlify/functions"
+
+[[plugins]]
+  package = "@netlify/plugin-python"
 
 [[redirects]]
   from = "/*"
@@ -9,4 +13,20 @@
 
 [build.environment]
   PYTHON_VERSION = "3.9"
+
+# Function configuration
+# Note: Free tier has 10s timeout, Pro tier has 26s timeout
+# ML model loading may exceed these limits on first request
+[functions]
+  # Python functions are automatically detected
+  # Timeout is set per function or globally
+  included_files = ["netlify/functions/**", "best.pt"]
+  
+# Note: Netlify Functions limitations:
+# - Free tier: 10 second timeout (may timeout on first request)
+# - Pro tier: 26 second timeout (better but still tight)
+# - Payload limit: 6MB
+# - Cold starts can be slow
+# 
+# Recommendation: Consider Railway/Render backend if timeouts occur
 

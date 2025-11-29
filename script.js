@@ -1,13 +1,10 @@
-// API endpoint - UPDATE THIS with your deployed backend URL
-// For local development: http://localhost:5000
-// For production: Replace with your backend URL (Railway, Render, Fly.io, etc.)
-// Example: const API_URL = 'https://your-app.railway.app';
-
-// Detect if we're in development or production
+// API endpoint - Uses Netlify Functions
+// For local development with Netlify Dev: use relative paths
+// For production: Netlify Functions are automatically available at /.netlify/functions/
 const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-const API_URL = isLocalhost 
-    ? 'http://localhost:5000'  // Local development
-    : 'https://your-backend-url.railway.app';  // TODO: Replace with your actual backend URL
+const API_BASE = isLocalhost 
+    ? 'http://localhost:8888/.netlify/functions'  // Local Netlify Dev
+    : '/.netlify/functions';  // Production - Netlify Functions
 
 const uploadArea = document.getElementById('uploadArea');
 const fileInput = document.getElementById('fileInput');
@@ -63,45 +60,49 @@ async function handleFile(file) {
 
     // Display original image
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
         originalImage.src = e.target.result;
+        
+        // Convert image to base64 for Netlify Functions
+        const base64Image = e.target.result; // Already includes data:image/... prefix
+        
+        try {
+            const response = await fetch(`${API_BASE}/detect`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    image: base64Image
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Detection failed');
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Display result image
+                resultImage.src = data.result_image;
+
+                // Display detections
+                displayDetections(data.detections);
+
+                // Show results
+                resultsSection.style.display = 'block';
+            } else {
+                throw new Error('Detection failed');
+            }
+        } catch (err) {
+            showError(`Error: ${err.message}`);
+        } finally {
+            loading.style.display = 'none';
+        }
     };
     reader.readAsDataURL(file);
-
-    // Create form data
-    const formData = new FormData();
-    formData.append('image', file);
-
-    try {
-        const response = await fetch(`${API_URL}/detect`, {
-            method: 'POST',
-            body: formData
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Detection failed');
-        }
-
-        const data = await response.json();
-
-        if (data.success) {
-            // Display result image
-            resultImage.src = data.result_image;
-
-            // Display detections
-            displayDetections(data.detections);
-
-            // Show results
-            resultsSection.style.display = 'block';
-        } else {
-            throw new Error('Detection failed');
-        }
-    } catch (err) {
-        showError(`Error: ${err.message}`);
-    } finally {
-        loading.style.display = 'none';
-    }
 }
 
 function displayDetections(detections) {
