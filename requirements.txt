@@ -10,7 +10,5 @@ opencv-python-headless
 pillow
 gdown
 
-# Web framework
-flask
-flask-cors
-gunicorn
+# Web framework - Streamlit
+streamlit
