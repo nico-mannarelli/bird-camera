@@ -1,8 +1,12 @@
+# Use CPU-only PyTorch (much smaller, faster install)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.0.1+cpu
+torchvision==0.15.2+cpu
+
+# Other dependencies
 ultralytics
 opencv-python-headless
 pillow
-torch
-torchvision
 gdown
 flask
 flask-cors
