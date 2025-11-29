@@ -1,8 +1,8 @@
 # Use CPU-only PyTorch (much smaller, ~200MB vs ~2GB+ with CUDA)
 # Install PyTorch CPU version from PyTorch's CPU index
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.0.1
-torchvision==0.15.2
+torch==2.9.1+cpu
+torchvision==0.24.1+cpu
 
 # ML and image processing
 ultralytics
