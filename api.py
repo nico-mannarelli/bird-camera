@@ -1,12 +1,16 @@
 """
 Flask API for Bird Detection
 """
+import os
+# Set OpenCV to not use GUI (headless mode)
+os.environ['OPENCV_IO_ENABLE_OPENEXR'] = '0'
+os.environ['QT_QPA_PLATFORM'] = 'offscreen'
+
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from ultralytics import YOLO
 from PIL import Image
 import gdown
-import os
 import io
 import base64
 import numpy as np
