@@ -29,5 +29,6 @@ COPY . .
 EXPOSE $PORT
 
 # Run with gunicorn
-CMD gunicorn api:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+# Use shell form to expand $PORT environment variable
+CMD ["sh", "-c", "gunicorn api:app --bind 0.0.0.0:${PORT:-5000} --workers 2 --timeout 120"]
 
