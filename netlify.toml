@@ -12,7 +12,7 @@
   status = 200
 
 [build.environment]
-  PYTHON_VERSION = "3.9"
+  PYTHON_VERSION = "3.10"
 
 # Function configuration
 # Note: Free tier has 10s timeout, Pro tier has 26s timeout
