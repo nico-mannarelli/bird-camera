@@ -1,14 +1,14 @@
-# Use CPU-only PyTorch (much smaller, ~200MB vs ~2GB)
-# Install with: pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-# For Railway, we'll let it install normally (it will use CPU version on non-GPU systems)
+# Use CPU-only PyTorch (much smaller, ~200MB vs ~2GB+ with CUDA)
+# Install PyTorch CPU version from PyTorch's CPU index
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.0.1
+torchvision==0.15.2
 
 # ML and image processing
 ultralytics
 opencv-python-headless
 pillow
 gdown
-torch
-torchvision
 
 # Web framework
 flask

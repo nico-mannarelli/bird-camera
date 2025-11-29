@@ -1,0 +1,21 @@
+# Ignore unnecessary files to reduce image size
+bird_detection/
+examples/
+*.md
+.git/
+.gitignore
+netlify/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*.log
+runs/
+*.csv
+*.png
+*.jpg
+*.jpeg
+
