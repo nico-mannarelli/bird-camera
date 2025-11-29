@@ -1,11 +1,14 @@
-# PyTorch is installed separately in Dockerfile for CPU-only version
-# This reduces size from ~2GB to ~200MB
+# Use CPU-only PyTorch (much smaller, ~200MB vs ~2GB)
+# Install with: pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+# For Railway, we'll let it install normally (it will use CPU version on non-GPU systems)
 
 # ML and image processing
 ultralytics
 opencv-python-headless
 pillow
 gdown
+torch
+torchvision
 
 # Web framework
 flask
