@@ -1,13 +1,13 @@
-# Use CPU-only PyTorch (much smaller, faster install)
---extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.0.1+cpu
-torchvision==0.15.2+cpu
+# PyTorch is installed separately in Dockerfile for CPU-only version
+# This reduces size from ~2GB to ~200MB
 
-# Other dependencies
+# ML and image processing
 ultralytics
 opencv-python-headless
 pillow
 gdown
+
+# Web framework
 flask
 flask-cors
 gunicorn
