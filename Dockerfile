@@ -26,6 +26,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Run with gunicorn
-# Use shell form to expand $PORT environment variable (Railway sets this)
-CMD ["sh", "-c", "gunicorn api:app --bind 0.0.0.0:${PORT:-5000} --workers 2 --timeout 120"]
+# Use shell form (no brackets) so $PORT gets expanded
+CMD gunicorn api:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
 
