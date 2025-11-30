@@ -71,11 +71,6 @@ with st.sidebar:
         help="Adjust the minimum confidence level for detections. Lower values show more detections but may include false positives."
     )
     
-    # Theme note (Streamlit theme is changed in Settings menu)
-    st.markdown("---")
-    st.header("🎨 Appearance")
-    st.info("💡 To change theme: Click ☰ menu → Settings → Theme")
-    
     st.markdown("---")
     st.header("ℹ️ About")
     st.write("""
