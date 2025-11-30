@@ -71,15 +71,10 @@ with st.sidebar:
         help="Adjust the minimum confidence level for detections. Lower values show more detections but may include false positives."
     )
     
-    # Dark mode toggle (using theme selector)
+    # Theme note (Streamlit theme is changed in Settings menu)
     st.markdown("---")
     st.header("🎨 Appearance")
-    theme = st.selectbox(
-        "Theme",
-        ["Light", "Dark", "Auto"],
-        index=2,
-        help="Choose your preferred theme"
-    )
+    st.info("💡 To change theme: Click ☰ menu → Settings → Theme")
     
     st.markdown("---")
     st.header("ℹ️ About")
@@ -157,14 +152,14 @@ if uploaded_file:
         result_pil = Image.fromarray(result_img[..., ::-1])
         img_buffer = io.BytesIO()
         result_pil.save(img_buffer, format='PNG')
-        img_buffer.seek(0)
+        img_bytes = img_buffer.getvalue()  # Get actual bytes for download
         
         col_download1, col_download2 = st.columns(2)
         
         with col_download1:
             st.download_button(
                 label="📥 Download Annotated Image",
-                data=img_buffer,
+                data=img_bytes,
                 file_name=f"bird_detection_{int(time.time())}.png",
                 mime="image/png",
                 use_container_width=True
@@ -179,7 +174,7 @@ if uploaded_file:
             
             st.download_button(
                 label="📄 Download Detection Data",
-                data=detection_text,
+                data=detection_text.encode('utf-8'),  # Encode text to bytes
                 file_name=f"bird_detections_{int(time.time())}.txt",
                 mime="text/plain",
                 use_container_width=True
