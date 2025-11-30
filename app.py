@@ -5,13 +5,18 @@ import gdown
 import os
 import io
 import time
+from datetime import datetime
 
-# Page config with dark mode support
+# Page config
 st.set_page_config(
     page_title="Bird Species Detector", 
     page_icon="🐦",
     layout="wide"
 )
+
+# Initialize session state for detection history
+if 'detection_history' not in st.session_state:
+    st.session_state.detection_history = []
 
 # Custom CSS for better styling
 st.markdown("""
@@ -28,6 +33,13 @@ st.markdown("""
     }
     .stButton>button {
         width: 100%;
+    }
+    .bird-info-card {
+        padding: 1rem;
+        border-left: 4px solid #1f77b4;
+        background-color: #f0f2f6;
+        border-radius: 0.25rem;
+        margin: 0.5rem 0;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -55,6 +67,18 @@ def load_model():
     
     return YOLO(model_path)
 
+def get_bird_info_url(bird_name):
+    """Generate Wikipedia URL for bird species"""
+    # Clean bird name for URL
+    url_name = bird_name.replace(" ", "_").replace("(", "").replace(")", "")
+    return f"https://en.wikipedia.org/wiki/{url_name}"
+
+def get_allaboutbirds_url(bird_name):
+    """Generate AllAboutBirds URL (approximate)"""
+    # AllAboutBirds uses different URL structure, this is a search link
+    search_name = bird_name.replace(" ", "+")
+    return f"https://www.allaboutbirds.org/guide/{search_name}"
+
 model = load_model()
 
 # Sidebar with settings
@@ -70,6 +94,26 @@ with st.sidebar:
         step=0.05,
         help="Adjust the minimum confidence level for detections. Lower values show more detections but may include false positives."
     )
+    
+    st.markdown("---")
+    
+    # Detection History
+    st.header("📚 Detection History")
+    if st.session_state.detection_history:
+        st.write(f"**{len(st.session_state.detection_history)} detection(s) saved**")
+        if st.button("🗑️ Clear History", use_container_width=True):
+            st.session_state.detection_history = []
+            st.rerun()
+        
+        # Show recent detections
+        st.write("**Recent detections:**")
+        for i, hist in enumerate(reversed(st.session_state.detection_history[-5:]), 1):
+            with st.expander(f"Detection #{len(st.session_state.detection_history) - len(st.session_state.detection_history[-5:]) + i}: {hist['timestamp']}"):
+                st.write(f"**Species:** {', '.join(hist['species'])}")
+                st.write(f"**Count:** {hist['count']} bird(s)")
+                st.write(f"**Confidence:** {hist['avg_confidence']:.1f}%")
+    else:
+        st.info("No detections saved yet. Upload an image to start!")
     
     st.markdown("---")
     st.header("ℹ️ About")
@@ -96,8 +140,21 @@ with st.sidebar:
 uploaded_file = st.file_uploader("Choose a bird image...", type=['jpg', 'jpeg', 'png'])
 
 if uploaded_file:
-    # Display original image
+    # Display image metadata
     image = Image.open(uploaded_file)
+    image_size = len(uploaded_file.getvalue())
+    image_format = image.format or "Unknown"
+    
+    # Show metadata in expander
+    with st.expander("📊 Image Information"):
+        col_meta1, col_meta2, col_meta3 = st.columns(3)
+        with col_meta1:
+            st.metric("Dimensions", f"{image.width} × {image.height}")
+        with col_meta2:
+            st.metric("File Size", f"{image_size / 1024:.1f} KB")
+        with col_meta3:
+            st.metric("Format", image_format)
+    
     col1, col2 = st.columns(2)
     
     with col1:
@@ -123,6 +180,11 @@ if uploaded_file:
     st.subheader("🐦 Detected Species:")
     
     if len(results[0].boxes) > 0:
+        # Store detection data for history
+        detections_data = []
+        species_list = []
+        confidences = []
+        
         # Create columns for detection cards
         num_detections = len(results[0].boxes)
         cols = st.columns(min(3, num_detections))
@@ -131,6 +193,17 @@ if uploaded_file:
             cls = int(box.cls[0])
             conf = float(box.conf[0])
             label = model.names[cls]
+            species_list.append(label)
+            confidences.append(conf)
+            
+            # Get bounding box coordinates
+            box_coords = box.xyxy[0].cpu().numpy()
+            
+            detections_data.append({
+                'species': label,
+                'confidence': conf,
+                'bbox': box_coords.tolist()
+            })
             
             with cols[i % len(cols)]:
                 st.metric(
@@ -138,6 +211,41 @@ if uploaded_file:
                     value=label,
                     delta=f"{conf*100:.1f}% confidence"
                 )
+        
+        # Bird Information Cards
+        st.markdown("---")
+        st.subheader("📖 Bird Information")
+        
+        unique_species = list(set(species_list))
+        for species in unique_species:
+            with st.expander(f"🐦 {species} - Learn More"):
+                col_info1, col_info2 = st.columns(2)
+                
+                with col_info1:
+                    st.write(f"**Species:** {species}")
+                    # Get detections for this species
+                    species_detections = [d for d in detections_data if d['species'] == species]
+                    st.write(f"**Detected:** {len(species_detections)} time(s)")
+                    if species_detections:
+                        avg_conf = sum(d['confidence'] for d in species_detections) / len(species_detections)
+                        st.write(f"**Average Confidence:** {avg_conf*100:.1f}%")
+                
+                with col_info2:
+                    st.write("**Learn More:**")
+                    wiki_url = get_bird_info_url(species)
+                    st.markdown(f"[🌐 Wikipedia]({wiki_url})")
+                    
+                    # Try to create a search link for AllAboutBirds
+                    search_url = f"https://www.allaboutbirds.org/search/?q={species.replace(' ', '+')}"
+                    st.markdown(f"[🐦 All About Birds (Search)]({search_url})")
+                
+                st.write("---")
+                st.write("**About this species:**")
+                st.info("""
+                This bird is part of the NABirds dataset with 555 North American bird species. 
+                For detailed information about habitat, diet, behavior, and conservation status, 
+                visit the links above.
+                """)
         
         # Export annotated image
         st.markdown("---")
@@ -147,9 +255,9 @@ if uploaded_file:
         result_pil = Image.fromarray(result_img[..., ::-1])
         img_buffer = io.BytesIO()
         result_pil.save(img_buffer, format='PNG')
-        img_bytes = img_buffer.getvalue()  # Get actual bytes for download
+        img_bytes = img_buffer.getvalue()
         
-        col_download1, col_download2 = st.columns(2)
+        col_download1, col_download2, col_download3 = st.columns(3)
         
         with col_download1:
             st.download_button(
@@ -168,12 +276,52 @@ if uploaded_file:
             ])
             
             st.download_button(
-                label="📄 Download Detection Data",
-                data=detection_text.encode('utf-8'),  # Encode text to bytes
+                label="📄 Download Detection Data (TXT)",
+                data=detection_text.encode('utf-8'),
                 file_name=f"bird_detections_{int(time.time())}.txt",
                 mime="text/plain",
                 use_container_width=True
             )
+        
+        with col_download3:
+            # Export as JSON
+            import json
+            json_data = {
+                'timestamp': datetime.now().isoformat(),
+                'image_info': {
+                    'width': image.width,
+                    'height': image.height,
+                    'format': image_format,
+                    'size_kb': round(image_size / 1024, 2)
+                },
+                'detections': detections_data,
+                'inference_time_ms': round(inference_time * 1000, 2),
+                'confidence_threshold': confidence
+            }
+            json_str = json.dumps(json_data, indent=2)
+            
+            st.download_button(
+                label="📋 Download Detection Data (JSON)",
+                data=json_str.encode('utf-8'),
+                file_name=f"bird_detections_{int(time.time())}.json",
+                mime="application/json",
+                use_container_width=True
+            )
+        
+        # Save to history button
+        st.markdown("---")
+        if st.button("💾 Save to Detection History", use_container_width=True):
+            history_entry = {
+                'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                'species': species_list,
+                'count': num_detections,
+                'avg_confidence': sum(confidences) / len(confidences) * 100,
+                'confidence_threshold': confidence,
+                'inference_time': round(inference_time * 1000, 2)
+            }
+            st.session_state.detection_history.append(history_entry)
+            st.success(f"✅ Saved to history! ({len(st.session_state.detection_history)} total)")
+            st.rerun()
         
         # Summary stats
         st.info(f"✅ Found {num_detections} bird(s) with confidence ≥ {confidence*100:.0f}%")
