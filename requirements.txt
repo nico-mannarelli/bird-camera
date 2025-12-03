@@ -6,7 +6,7 @@ torchvision==0.24.1+cpu
 
 # ML and image processing
 ultralytics
-opencv-python-headless==4.8.1.78
+opencv-python-headless
 pillow
 gdown
 

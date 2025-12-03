@@ -6,14 +6,40 @@ import sys
 os.environ['OPENCV_IO_ENABLE_OPENEXR'] = '0'
 os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 os.environ['OPENCV_IO_ENABLE_JASPER'] = '0'
-
-# Try to suppress OpenCV warnings
 os.environ['OPENCV_LOG_LEVEL'] = 'ERROR'
+
+# Workaround for libGL issue on Streamlit Cloud
+# Try to import cv2 with error suppression
+try:
+    import cv2
+    # Force OpenCV to use headless mode
+    cv2.setNumThreads(0)
+except Exception as e:
+    # If cv2 import fails, try to continue anyway
+    # Ultralytics might still work
+    pass
 
 try:
     from ultralytics import YOLO
 except ImportError as e:
-    st.error(f"Failed to import YOLO: {e}")
+    # Show a more helpful error message
+    error_msg = str(e)
+    if 'libGL' in error_msg:
+        st.error("""
+        **OpenCV Library Error**
+        
+        The app is having trouble loading OpenCV due to missing system libraries.
+        This is a known issue with Streamlit Cloud.
+        
+        **Possible solutions:**
+        1. Try refreshing the page
+        2. Wait a few minutes and try again (Streamlit Cloud may need to install dependencies)
+        3. Contact Streamlit support if the issue persists
+        
+        **Error details:** libGL.so.1 library not found
+        """)
+    else:
+        st.error(f"Failed to import YOLO: {e}")
     st.stop()
 
 from PIL import Image
