@@ -1,8 +1,23 @@
 import streamlit as st
-from ultralytics import YOLO
+import os
+import sys
+
+# Set OpenCV environment variables before importing (fixes headless issues)
+os.environ['OPENCV_IO_ENABLE_OPENEXR'] = '0'
+os.environ['QT_QPA_PLATFORM'] = 'offscreen'
+os.environ['OPENCV_IO_ENABLE_JASPER'] = '0'
+
+# Try to suppress OpenCV warnings
+os.environ['OPENCV_LOG_LEVEL'] = 'ERROR'
+
+try:
+    from ultralytics import YOLO
+except ImportError as e:
+    st.error(f"Failed to import YOLO: {e}")
+    st.stop()
+
 from PIL import Image
 import gdown
-import os
 import io
 import time
 from datetime import datetime
